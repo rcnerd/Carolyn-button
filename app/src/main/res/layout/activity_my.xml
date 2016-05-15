@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/longitudeTextGPS"
             android:layout_toRightOf="@+id/longitudeTextGPS"
-            android:text="b.0000"
+            android:text="@string/my_Longtitude"
             android:textSize="20sp"/>
 
         <TextView
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/latitudeTextGPS"
             android:layout_toRightOf="@+id/longitudeTextGPS"
-            android:text="a.0000"
+            android:text="@string/my_Latitude"
             android:textSize="20sp"/>
 
     </RelativeLayout>
