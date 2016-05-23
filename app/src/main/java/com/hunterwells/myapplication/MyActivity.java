@@ -69,7 +69,10 @@ public class MyActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        longitudeLocationTextGPS = (TextView) findViewById(R.id.longitudeLocationTextGPS);
+        latitudeLocationTextGPS = (TextView) findViewById(R.id.latitudeLocationTextGPS);
     }
 
     @Override
