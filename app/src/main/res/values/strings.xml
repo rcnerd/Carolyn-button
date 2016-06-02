@@ -6,4 +6,6 @@
     <string name="title_activity_display_message">Display_message</string>
     <string name="my_Longtitude">a.0000</string>
     <string name="my_Latitude">b.0000</string>
+    <string name="pause">Pause Location Updates</string>
+    <string name="resume">Resume Location Updates</string>
 </resources>

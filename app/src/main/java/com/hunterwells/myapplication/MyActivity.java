@@ -1,8 +1,10 @@
 package com.hunterwells.myapplication;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,11 +37,11 @@ public class MyActivity extends AppCompatActivity {
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
-    private LocationManager locationManager;
+    LocationManager locationManager;
 
     ///GPS//
-    private double longitude;
-    private double latitude;
+    double longitude;
+    double latitude;
     TextView longitudeLocationTextGPS;
     TextView latitudeLocationTextGPS;
 
@@ -69,10 +72,12 @@ public class MyActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         longitudeLocationTextGPS = (TextView) findViewById(R.id.longitudeLocationTextGPS);
         latitudeLocationTextGPS = (TextView) findViewById(R.id.latitudeLocationTextGPS);
+
+
     }
 
     @Override
@@ -140,9 +145,11 @@ public class MyActivity extends AppCompatActivity {
     ////////////////  MAGIC GPS STUFFS ////////////////////////////////
     //Source:  https://github.com/obaro/SimpleLocationApp
 
-    private boolean isLocationEnabled() {
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled((locationManager.NETWORK_PROVIDER));
+    private boolean checkLocation(){
+        if (!isLocationEnabled()){
+            showAlert();
+        }
+        return isLocationEnabled();
     }
 
     private void showAlert() {
@@ -164,15 +171,37 @@ public class MyActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private boolean checkLocation(){
-        if (!isLocationEnabled()){
-            showAlert();
+    private boolean isLocationEnabled() {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled((locationManager.NETWORK_PROVIDER));
+    }
+
+    public void toggleGPSUpdates(View view) {
+        if (!checkLocation())
+            return;
+        Button button = (Button) view;
+        if (button.getText().equals(getResources().getString(R.string.pause))) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locationManager.removeUpdates(locationListener);
+            button.setText(R.string.resume);
         }
-        return isLocationEnabled();
+        else {
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 2 * 60 * 1000, 10, locationListener);
+            button.setText(R.string.pause);
+        }
     }
 
     private final LocationListener locationListener = new LocationListener(){
-        @Override
         public void onLocationChanged(Location location) {
             longitude = location.getLongitude();
             latitude = location.getLatitude();

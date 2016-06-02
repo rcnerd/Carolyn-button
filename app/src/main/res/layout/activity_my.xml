@@ -37,11 +37,20 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60dp" />
 
+        <Button
+            android:id="@+id/locationControllerGPS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/titleTextGPS"
+            android:text="Start Location Updates"
+            android:onClick="toggleGPSUpdates"/>
+
         <TextView
             android:id="@+id/longitudeTextGPS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/titleTextGPS"
+            android:layout_below="@id/locationControllerGPS"
             android:layout_marginLeft="5dp"
             android:text="Longitude:"
             android:textSize="25sp"
